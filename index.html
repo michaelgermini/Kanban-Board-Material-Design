@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board - Material Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <span class="material-icons">view_kanban</span>
+                Kanban Board
+            </h1>
+            <div class="header-actions">
+                <button class="icon-btn" id="manageColumnsBtn" title="Gérer les colonnes">
+                    <span class="material-icons">view_week</span>
+                </button>
+                <button class="icon-btn" id="manageRowsBtn" title="Gérer les lignes">
+                    <span class="material-icons">view_stream</span>
+                </button>
+                <button class="icon-btn" id="analyticsBtn" title="Analytics">
+                    <span class="material-icons">bar_chart</span>
+                </button>
+                <button class="icon-btn" id="exportBtn" title="Exporter">
+                    <span class="material-icons">download</span>
+                </button>
+                <button class="icon-btn" id="importBtn" title="Importer">
+                    <span class="material-icons">upload</span>
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button class="add-task-btn" id="addTaskBtn">
+                    <span class="material-icons">add</span>
+                    Nouvelle tâche
+                </button>
+            </div>
+        </div>
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <span class="material-icons">search</span>
+                <input type="text" id="searchInput" placeholder="Rechercher des tâches...">
+                <button class="clear-btn" id="clearSearch" style="display: none;">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="filter-tags" id="filterTags">
+                <!-- Tag filters will be added dynamically -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Analytics Modal -->
+    <div class="modal-overlay" id="analyticsModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">bar_chart</span>
+                    Analytics & Statistiques
+                </h3>
+                <button class="modal-close" id="analyticsClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="analytics-content" id="analyticsContent">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <span class="material-icons stat-icon">task</span>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalTasks">0</div>
+                            <div class="stat-label">Total Tâches</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons stat-icon">check_circle</span>
+                        <div class="stat-info">
+                            <div class="stat-value" id="completedTasks">0</div>
+                            <div class="stat-label">Terminées</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons stat-icon">pending</span>
+                        <div class="stat-info">
+                            <div class="stat-value" id="inProgressTasks">0</div>
+                            <div class="stat-label">En Cours</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons stat-icon">trending_up</span>
+                        <div class="stat-info">
+                            <div class="stat-value" id="completionRate">0%</div>
+                            <div class="stat-label">Taux de Complétion</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h4>Répartition par Statut</h4>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h4>Répartition par Priorité</h4>
+                        <canvas id="priorityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Columns Modal -->
+    <div class="modal-overlay" id="columnModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">view_week</span>
+                    Gérer les Colonnes
+                </h3>
+                <button class="modal-close" id="columnModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="management-content">
+                <button class="btn btn-primary" id="addColumnBtn">
+                    <span class="material-icons">add</span>
+                    Ajouter une colonne
+                </button>
+                <div class="items-list" id="columnsList">
+                    <!-- Columns will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Rows Modal -->
+    <div class="modal-overlay" id="rowModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">view_stream</span>
+                    Gérer les Lignes / Swimlanes
+                </h3>
+                <button class="modal-close" id="rowModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="management-content">
+                <button class="btn btn-primary" id="addRowBtn">
+                    <span class="material-icons">add</span>
+                    Ajouter une ligne
+                </button>
+                <div class="items-list" id="rowsList">
+                    <!-- Rows will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Column Modal -->
+    <div class="modal-overlay" id="editColumnModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">edit</span>
+                    <span id="editColumnTitle">Modifier la Colonne</span>
+                </h3>
+                <button class="modal-close" id="editColumnClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form class="task-form" id="columnForm">
+                <input type="hidden" id="columnId">
+                <div class="form-group">
+                    <label for="columnName" class="form-label">Nom de la colonne</label>
+                    <input type="text" id="columnName" class="form-input" placeholder="Ex: À faire, En cours..." required>
+                </div>
+                <div class="form-group">
+                    <label for="columnEmoji" class="form-label">Emoji</label>
+                    <input type="text" id="columnEmoji" class="form-input" placeholder="📝" maxlength="2">
+                    <div class="emoji-suggestions">
+                        <button type="button" class="emoji-btn" data-emoji="📝">📝</button>
+                        <button type="button" class="emoji-btn" data-emoji="⚡">⚡</button>
+                        <button type="button" class="emoji-btn" data-emoji="👁️">👁️</button>
+                        <button type="button" class="emoji-btn" data-emoji="✅">✅</button>
+                        <button type="button" class="emoji-btn" data-emoji="🚀">🚀</button>
+                        <button type="button" class="emoji-btn" data-emoji="⏸️">⏸️</button>
+                        <button type="button" class="emoji-btn" data-emoji="🎯">🎯</button>
+                        <button type="button" class="emoji-btn" data-emoji="💡">💡</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="columnColor" class="form-label">Couleur</label>
+                    <input type="color" id="columnColor" class="form-input-color" value="#1976d2">
+                    <div class="color-suggestions">
+                        <button type="button" class="color-btn" data-color="#1976d2" style="background-color: #1976d2;"></button>
+                        <button type="button" class="color-btn" data-color="#ff9800" style="background-color: #ff9800;"></button>
+                        <button type="button" class="color-btn" data-color="#9c27b0" style="background-color: #9c27b0;"></button>
+                        <button type="button" class="color-btn" data-color="#4caf50" style="background-color: #4caf50;"></button>
+                        <button type="button" class="color-btn" data-color="#f44336" style="background-color: #f44336;"></button>
+                        <button type="button" class="color-btn" data-color="#00bcd4" style="background-color: #00bcd4;"></button>
+                        <button type="button" class="color-btn" data-color="#ff5722" style="background-color: #ff5722;"></button>
+                        <button type="button" class="color-btn" data-color="#607d8b" style="background-color: #607d8b;"></button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelColumnBtn">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Row Modal -->
+    <div class="modal-overlay" id="editRowModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">edit</span>
+                    <span id="editRowTitle">Modifier la Ligne</span>
+                </h3>
+                <button class="modal-close" id="editRowClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form class="task-form" id="rowForm">
+                <input type="hidden" id="rowId">
+                <div class="form-group">
+                    <label for="rowName" class="form-label">Nom de la ligne/projet</label>
+                    <input type="text" id="rowName" class="form-input" placeholder="Ex: Projet Alpha, Sprint 1..." required>
+                </div>
+                <div class="form-group">
+                    <label for="rowColor" class="form-label">Couleur</label>
+                    <input type="color" id="rowColor" class="form-input-color" value="#757575">
+                    <div class="color-suggestions">
+                        <button type="button" class="color-btn-row" data-color="#757575" style="background-color: #757575;"></button>
+                        <button type="button" class="color-btn-row" data-color="#1976d2" style="background-color: #1976d2;"></button>
+                        <button type="button" class="color-btn-row" data-color="#388e3c" style="background-color: #388e3c;"></button>
+                        <button type="button" class="color-btn-row" data-color="#d32f2f" style="background-color: #d32f2f;"></button>
+                        <button type="button" class="color-btn-row" data-color="#f57c00" style="background-color: #f57c00;"></button>
+                        <button type="button" class="color-btn-row" data-color="#7b1fa2" style="background-color: #7b1fa2;"></button>
+                        <button type="button" class="color-btn-row" data-color="#0097a7" style="background-color: #0097a7;"></button>
+                        <button type="button" class="color-btn-row" data-color="#455a64" style="background-color: #455a64;"></button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelRowBtn">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="kanban-board" id="kanbanBoard">
+        <div class="kanban-column" data-column="todo">
+            <div class="column-header">
+                <h2 class="column-title">
+                    <span class="material-icons column-icon">radio_button_unchecked</span>
+                    À faire
+                </h2>
+                <span class="task-count" id="todoCount">0</span>
+            </div>
+            <div class="column-content" id="todoColumn">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="kanban-column" data-column="in-progress">
+            <div class="column-header">
+                <h2 class="column-title">
+                    <span class="material-icons column-icon">timelapse</span>
+                    En cours
+                </h2>
+                <span class="task-count" id="inProgressCount">0</span>
+            </div>
+            <div class="column-content" id="inProgressColumn">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="kanban-column" data-column="review">
+            <div class="column-header">
+                <h2 class="column-title">
+                    <span class="material-icons column-icon">visibility</span>
+                    Révision
+                </h2>
+                <span class="task-count" id="reviewCount">0</span>
+            </div>
+            <div class="column-content" id="reviewColumn">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="kanban-column" data-column="done">
+            <div class="column-header">
+                <h2 class="column-title">
+                    <span class="material-icons column-icon">check_circle</span>
+                    Terminé
+                </h2>
+                <span class="task-count" id="doneCount">0</span>
+            </div>
+            <div class="column-content" id="doneColumn">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Task Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">add_task</span>
+                    Nouvelle tâche
+                </h3>
+                <button class="modal-close" id="modalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form class="task-form" id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle" class="form-label">Titre de la tâche</label>
+                    <input type="text" id="taskTitle" class="form-input" placeholder="Entrez le titre de la tâche" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription" class="form-label">Description</label>
+                    <textarea id="taskDescription" class="form-textarea" placeholder="Entrez la description de la tâche" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority" class="form-label">Priorité</label>
+                    <select id="taskPriority" class="form-select">
+                        <option value="low">Faible</option>
+                        <option value="medium" selected>Moyenne</option>
+                        <option value="high">Élevée</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee" class="form-label">Assigné à</label>
+                    <input type="text" id="taskAssignee" class="form-input" placeholder="Nom de l'assigné">
+                </div>
+                <div class="form-group">
+                    <label for="taskTags" class="form-label">Tags (séparés par des virgules)</label>
+                    <input type="text" id="taskTags" class="form-input" placeholder="bug, feature, urgent, etc.">
+                    <div class="tag-suggestions">
+                        <button type="button" class="tag-suggest" data-tag="bug">🐛 Bug</button>
+                        <button type="button" class="tag-suggest" data-tag="feature">✨ Feature</button>
+                        <button type="button" class="tag-suggest" data-tag="urgent">🔥 Urgent</button>
+                        <button type="button" class="tag-suggest" data-tag="design">🎨 Design</button>
+                        <button type="button" class="tag-suggest" data-tag="backend">⚙️ Backend</button>
+                        <button type="button" class="tag-suggest" data-tag="frontend">💻 Frontend</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate" class="form-label">Date d'échéance</label>
+                    <input type="date" id="taskDueDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="taskRow" class="form-label">Ligne / Projet</label>
+                    <select id="taskRow" class="form-select">
+                        <!-- Rows will be added dynamically -->
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer la tâche</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal-overlay" id="editModalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="material-icons">edit</span>
+                    Modifier la tâche
+                </h3>
+                <button class="modal-close" id="editModalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form class="task-form" id="editTaskForm">
+                <input type="hidden" id="editTaskId">
+                <div class="form-group">
+                    <label for="editTaskTitle" class="form-label">Titre de la tâche</label>
+                    <input type="text" id="editTaskTitle" class="form-input" placeholder="Entrez le titre de la tâche" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskDescription" class="form-label">Description</label>
+                    <textarea id="editTaskDescription" class="form-textarea" placeholder="Entrez la description de la tâche" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskPriority" class="form-label">Priorité</label>
+                    <select id="editTaskPriority" class="form-select">
+                        <option value="low">Faible</option>
+                        <option value="medium" selected>Moyenne</option>
+                        <option value="high">Élevée</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskAssignee" class="form-label">Assigné à</label>
+                    <input type="text" id="editTaskAssignee" class="form-input" placeholder="Nom de l'assigné">
+                </div>
+                <div class="form-group">
+                    <label for="editTaskTags" class="form-label">Tags (séparés par des virgules)</label>
+                    <input type="text" id="editTaskTags" class="form-input" placeholder="bug, feature, urgent, etc.">
+                    <div class="tag-suggestions">
+                        <button type="button" class="tag-suggest-edit" data-tag="bug">🐛 Bug</button>
+                        <button type="button" class="tag-suggest-edit" data-tag="feature">✨ Feature</button>
+                        <button type="button" class="tag-suggest-edit" data-tag="urgent">🔥 Urgent</button>
+                        <button type="button" class="tag-suggest-edit" data-tag="design">🎨 Design</button>
+                        <button type="button" class="tag-suggest-edit" data-tag="backend">⚙️ Backend</button>
+                        <button type="button" class="tag-suggest-edit" data-tag="frontend">💻 Frontend</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskDueDate" class="form-label">Date d'échéance</label>
+                    <input type="date" id="editTaskDueDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="editTaskRow" class="form-label">Ligne / Projet</label>
+                    <select id="editTaskRow" class="form-select">
+                        <!-- Rows will be added dynamically -->
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" id="deleteTaskBtn">Supprimer</button>
+                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
