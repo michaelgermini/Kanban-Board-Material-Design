@@ -1,6 +1,31 @@
-# 🚀 Kanban Board - Material Design - Pack Professionnel
+# 🚀 Kanban Board 2D - Material Design - Pack Professionnel
 
-Un tableau Kanban moderne, interactif et ultra-fonctionnel créé avec HTML, CSS et JavaScript vanilla, utilisant le Material Design de Google avec des fonctionnalités professionnelles avancées.
+[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge&logo=github)](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.0-orange?style=for-the-badge)](https://github.com/michaelgermini/Kanban-Board-Material-Design/releases)
+[![JavaScript](https://img.shields.io/badge/vanilla-JavaScript-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+Un tableau Kanban **ultra-moderne** avec organisation **2D (colonnes × lignes)**, analytics professionnels, et toutes les fonctionnalités avancées. Créé avec HTML, CSS et JavaScript vanilla, utilisant le Material Design de Google.
+
+## 🌟 [DÉMO EN LIGNE](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
+
+![Kanban Board Preview](https://via.placeholder.com/800x400/1976d2/ffffff?text=Kanban+Board+2D+Material+Design)
+
+## 🚀 Démarrage Rapide
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/michaelgermini/Kanban-Board-Material-Design.git
+
+# Ouvrir le fichier
+cd Kanban-Board-Material-Design
+# Double-cliquez sur index.html OU
+start index.html  # Windows
+open index.html   # macOS
+xdg-open index.html  # Linux
+```
+
+**C'est tout !** Aucune installation, aucune dépendance, aucune configuration. 🎉
 
 ---
 
@@ -10,8 +35,23 @@ Un tableau Kanban moderne, interactif et ultra-fonctionnel créé avec HTML, CSS
 - ✅ **Création rapide** : Interface intuitive avec formulaire complet
 - ✏️ **Édition facile** : Double-clic sur une tâche pour l'éditer
 - 🗑️ **Suppression sécurisée** : Confirmation avant suppression
-- 🔄 **Drag & Drop fluide** : Déplacement intuitif entre colonnes
+- 🔄 **Drag & Drop 2D** : Déplacement entre colonnes ET lignes
 - 📱 **Support tactile** : Optimisé pour mobile et tablettes
+
+### 📊 **Colonnes Dynamiques (Verticales)**
+- ➕ **Ajout illimité** : Créez autant de colonnes que nécessaire
+- ✏️ **Personnalisation complète** : Nom, emoji (📝⚡✅🚀), couleur
+- 🗑️ **Suppression intelligente** : Migration automatique des tâches
+- 🎨 **8 emojis suggérés** + sélecteur libre
+- 🌈 **8 couleurs prédéfinies** + color picker
+- 📊 **Grille auto-adaptative** : 1 à 6+ colonnes
+
+### 🏊 **Lignes / Swimlanes (Horizontales)**
+- ➕ **Organisation par projets** : Une ligne par projet/sprint/équipe
+- ✏️ **Modification facile** : Nom et couleur personnalisables
+- 🗑️ **Suppression avec migration** : Tâches réaffectées automatiquement
+- 🎯 **Grille 2D** : Colonnes × Lignes = Organisation parfaite
+- 📋 **Assignation flexible** : Déplacez les tâches entre lignes
 
 ### 🏷️ **Système de Tags/Labels Colorés**
 - **8 tags prédéfinis** avec couleurs distinctes :
@@ -418,5 +458,103 @@ Pour toute question ou suggestion :
 
 ---
 
+## 🛠️ Technologies & Stack
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Material Design](https://img.shields.io/badge/Material_Design-757575?style=for-the-badge&logo=material-design&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+
+- **Frontend** : HTML5, CSS3 (Variables, Grid, Flexbox)
+- **JavaScript** : ES6+ Vanilla (Classes, Modules, Arrow Functions)
+- **Design** : Material Design Guidelines
+- **Visualisation** : Chart.js 4.4.0
+- **Storage** : localStorage API
+- **Icons** : Google Material Icons
+- **Fonts** : Roboto (Google Fonts)
+
+---
+
+## 📦 Structure du Projet
+
+```
+Kanban-Board-Material-Design/
+├── 📄 index.html              # Structure HTML (450+ lignes)
+├── 🎨 styles.css              # Material Design CSS (1100+ lignes)
+├── 💻 script.js               # Logique JavaScript (600+ lignes)
+├── 📖 README.md               # Documentation principale
+├── 📚 GUIDE_COMPLET.md        # Guide utilisateur détaillé
+├── 🚫 .gitignore              # Git ignore rules
+└── 📁 .github/
+    └── workflows/
+        └── static.yml         # GitHub Pages deployment
+```
+
+**Total** : ~2200+ lignes de code professionnel !
+
+---
+
+## 🌍 Déploiement GitHub Pages
+
+Le projet est automatiquement déployé sur GitHub Pages via GitHub Actions.
+
+**URL de démo** : https://michaelgermini.github.io/Kanban-Board-Material-Design/
+
+---
+
+## 📸 Screenshots
+
+### Vue d'ensemble 2D
+![Grille 2D](https://via.placeholder.com/800x500/fafafa/1976d2?text=Grille+2D+Colonnes+x+Lignes)
+
+### Gestion des Colonnes
+![Colonnes](https://via.placeholder.com/800x400/ffffff/9c27b0?text=Gestion+Colonnes+Dynamiques)
+
+### Analytics Dashboard
+![Analytics](https://via.placeholder.com/800x400/ffffff/4caf50?text=Dashboard+Analytics+Chart.js)
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/amazing-feature`)
+3. Commit vos changements (`git commit -m 'Add amazing feature'`)
+4. Push vers la branche (`git push origin feature/amazing-feature`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📝 Licence
+
+Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+## 👨‍💻 Auteur
+
+**Michael Germini**
+- 📧 Email : michael@germini.info
+- 🐙 GitHub : [@michaelgermini](https://github.com/michaelgermini)
+
+---
+
+## ⭐ Support
+
+Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ !
+
+---
+
+## 🙏 Remerciements
+
+- [Google Material Design](https://material.io/) pour les guidelines
+- [Chart.js](https://www.chartjs.org/) pour les graphiques
+- [Google Fonts](https://fonts.google.com/) pour Roboto et Material Icons
+
+---
+
 **Créé avec ❤️ et Material Design**  
-*Version Pack Professionnel - Octobre 2025*
+*Version 2.0 - Pack Professionnel avec Grille 2D - Octobre 2025*
