@@ -1,0 +1,97 @@
+<svg width="300" height="550" viewBox="0 0 300 550" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mobile Frame -->
+  <rect x="25" y="10" width="250" height="530" rx="25" fill="#1a1a1a" stroke="#000000" stroke-width="3"/>
+  <rect x="35" y="20" width="230" height="510" rx="18" fill="#fafafa"/>
+  
+  <!-- Notch -->
+  <rect x="95" y="20" width="110" height="20" rx="10" fill="#1a1a1a"/>
+  
+  <!-- Status Bar -->
+  <rect x="35" y="40" width="230" height="25" fill="#1976d2"/>
+  <text x="50" y="57" font-family="Roboto, sans-serif" font-size="11" fill="white" font-weight="500">9:41</text>
+  <text x="250" y="57" text-anchor="end" font-family="Roboto, sans-serif" font-size="11" fill="white">📶 100%</text>
+  
+  <!-- Header -->
+  <rect x="35" y="65" width="230" height="45" fill="#ffffff"/>
+  <text x="50" y="92" font-family="Roboto, sans-serif" font-size="14" font-weight="500" fill="#212121">🎯 Kanban</text>
+  
+  <!-- Action Button -->
+  <circle cx="240" cy="87" r="16" fill="#1976d2"/>
+  <text x="240" y="93" text-anchor="middle" font-family="Roboto, sans-serif" font-size="18" fill="white" font-weight="700">+</text>
+  
+  <!-- Search Bar -->
+  <rect x="45" y="120" width="210" height="32" rx="16" fill="#f5f5f5"/>
+  <text x="65" y="140" font-family="Roboto, sans-serif" font-size="11" fill="#757575">🔍 Rechercher...</text>
+  
+  <!-- Tag Filters -->
+  <g transform="translate(45, 160)">
+    <rect width="45" height="20" rx="10" fill="#ef5350"/>
+    <text x="22.5" y="14" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="500">🐛 bug</text>
+    
+    <rect x="52" width="60" height="20" rx="10" fill="#42a5f5"/>
+    <text x="82" y="14" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="500">✨ feature</text>
+    
+    <rect x="119" width="55" height="20" rx="10" fill="#ff6f00"/>
+    <text x="146.5" y="14" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="500">🔥 urgent</text>
+  </g>
+  
+  <!-- Column Stack (Mobile View) -->
+  <!-- Column 1: À faire -->
+  <g transform="translate(45, 195)">
+    <rect width="210" height="70" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="2"/>
+    <rect width="210" height="25" rx="8" fill="#e3f2fd"/>
+    <text x="10" y="17" font-family="Roboto, sans-serif" font-size="11" font-weight="500" fill="#1976d2">📝 À faire</text>
+    <circle cx="190" cy="12.5" r="8" fill="#1976d2"/>
+    <text x="190" y="16" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="700">3</text>
+    
+    <!-- Task -->
+    <rect x="8" y="30" width="194" height="35" rx="4" fill="#fafafa" stroke="#e0e0e0"/>
+    <text x="12" y="45" font-family="Roboto, sans-serif" font-size="9" font-weight="500" fill="#212121">Implémenter API</text>
+    <rect x="12" y="50" width="45" height="12" rx="6" fill="#66bb6a"/>
+    <text x="34.5" y="58" text-anchor="middle" font-family="Roboto, sans-serif" font-size="7" fill="white">backend</text>
+    <circle cx="190" cy="37" r="3" fill="#ff9800"/>
+  </g>
+  
+  <!-- Column 2: En cours -->
+  <g transform="translate(45, 275)">
+    <rect width="210" height="70" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="2"/>
+    <rect width="210" height="25" rx="8" fill="#fff3e0"/>
+    <text x="10" y="17" font-family="Roboto, sans-serif" font-size="11" font-weight="500" fill="#ff9800">⚡ En cours</text>
+    <circle cx="190" cy="12.5" r="8" fill="#ff9800"/>
+    <text x="190" y="16" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="700">2</text>
+    
+    <!-- Task -->
+    <rect x="8" y="30" width="194" height="35" rx="4" fill="#fafafa" stroke="#e0e0e0"/>
+    <text x="12" y="45" font-family="Roboto, sans-serif" font-size="9" font-weight="500" fill="#212121">Design mobile UI</text>
+    <rect x="12" y="50" width="40" height="12" rx="6" fill="#ab47bc"/>
+    <text x="32" y="58" text-anchor="middle" font-family="Roboto, sans-serif" font-size="7" fill="white">design</text>
+    <circle cx="190" cy="37" r="3" fill="#f44336"/>
+  </g>
+  
+  <!-- Column 3: Révision -->
+  <g transform="translate(45, 355)">
+    <rect width="210" height="70" rx="8" fill="#ffffff" stroke="#e0e0e0" stroke-width="2"/>
+    <rect width="210" height="25" rx="8" fill="#f3e5f5"/>
+    <text x="10" y="17" font-family="Roboto, sans-serif" font-size="11" font-weight="500" fill="#9c27b0">👁️ Révision</text>
+    <circle cx="190" cy="12.5" r="8" fill="#9c27b0"/>
+    <text x="190" y="16" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white" font-weight="700">1</text>
+    
+    <!-- Task -->
+    <rect x="8" y="30" width="194" height="35" rx="4" fill="#fafafa" stroke="#e0e0e0"/>
+    <text x="12" y="45" font-family="Roboto, sans-serif" font-size="9" font-weight="500" fill="#212121">Tests unitaires</text>
+    <rect x="12" y="50" width="30" height="12" rx="6" fill="#ffca28"/>
+    <text x="27" y="58" text-anchor="middle" font-family="Roboto, sans-serif" font-size="7" fill="black">test</text>
+    <circle cx="190" cy="37" r="3" fill="#4caf50"/>
+  </g>
+  
+  <!-- Bottom Navigation Bar -->
+  <rect x="35" y="495" width="230" height="35" fill="#ffffff" stroke="#e0e0e0"/>
+  <circle cx="80" cy="512.5" r="4" fill="#757575"/>
+  <circle cx="150" cy="512.5" r="4" fill="#757575"/>
+  <circle cx="220" cy="512.5" r="4" fill="#757575"/>
+  
+  <!-- Scroll Indicator -->
+  <rect x="260" y="200" width="3" height="80" rx="1.5" fill="#e0e0e0"/>
+  <rect x="260" y="200" width="3" height="30" rx="1.5" fill="#1976d2"/>
+</svg>
+

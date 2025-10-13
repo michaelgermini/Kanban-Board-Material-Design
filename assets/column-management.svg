@@ -1,0 +1,75 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="rgba(0,0,0,0.5)"/>
+  
+  <!-- Modal -->
+  <rect x="100" y="50" width="400" height="300" rx="12" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Modal Header -->
+  <rect x="100" y="50" width="400" height="50" rx="12" fill="#1976d2"/>
+  <rect x="100" y="88" width="400" height="12" fill="#1976d2"/>
+  <text x="130" y="82" font-family="Roboto, sans-serif" font-size="16" fill="white" font-weight="500">📊 Gérer les Colonnes</text>
+  
+  <!-- Close Button -->
+  <circle cx="470" cy="75" r="12" fill="rgba(255,255,255,0.2)"/>
+  <text x="470" y="80" text-anchor="middle" font-family="Roboto, sans-serif" font-size="14" fill="white">✕</text>
+  
+  <!-- Add Button -->
+  <rect x="120" y="120" width="160" height="35" rx="6" fill="#1976d2"/>
+  <text x="200" y="142" text-anchor="middle" font-family="Roboto, sans-serif" font-size="13" fill="white" font-weight="500">+ Ajouter une colonne</text>
+  
+  <!-- Column Items List -->
+  <g transform="translate(120, 170)">
+    <!-- Column Item 1 -->
+    <rect width="360" height="50" rx="8" fill="#f5f5f5" stroke="#e0e0e0"/>
+    <text x="20" y="20" font-family="Roboto, sans-serif" font-size="20">📝</text>
+    <circle cx="60" cy="15" r="10" fill="#1976d2"/>
+    <text x="80" y="22" font-family="Roboto, sans-serif" font-size="13" font-weight="500" fill="#212121">À faire</text>
+    <text x="80" y="38" font-family="Roboto, sans-serif" font-size="10" fill="#757575">4 tâches</text>
+    
+    <!-- Action Buttons -->
+    <circle cx="310" cy="25" r="14" fill="rgba(0,0,0,0.04)"/>
+    <text x="310" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#757575">✏️</text>
+    
+    <circle cx="340" cy="25" r="14" fill="rgba(244,67,54,0.1)"/>
+    <text x="340" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#ef5350">🗑️</text>
+    
+    <!-- Column Item 2 -->
+    <g transform="translate(0, 60)">
+      <rect width="360" height="50" rx="8" fill="#f5f5f5" stroke="#e0e0e0"/>
+      <text x="20" y="20" font-family="Roboto, sans-serif" font-size="20">⚡</text>
+      <circle cx="60" cy="15" r="10" fill="#ff9800"/>
+      <text x="80" y="22" font-family="Roboto, sans-serif" font-size="13" font-weight="500" fill="#212121">En cours</text>
+      <text x="80" y="38" font-family="Roboto, sans-serif" font-size="10" fill="#757575">2 tâches</text>
+      
+      <circle cx="310" cy="25" r="14" fill="rgba(0,0,0,0.04)"/>
+      <text x="310" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#757575">✏️</text>
+      
+      <circle cx="340" cy="25" r="14" fill="rgba(244,67,54,0.1)"/>
+      <text x="340" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#ef5350">🗑️</text>
+    </g>
+    
+    <!-- Column Item 3 -->
+    <g transform="translate(0, 120)">
+      <rect width="360" height="50" rx="8" fill="#f5f5f5" stroke="#e0e0e0"/>
+      <text x="20" y="20" font-family="Roboto, sans-serif" font-size="20">✅</text>
+      <circle cx="60" cy="15" r="10" fill="#4caf50"/>
+      <text x="80" y="22" font-family="Roboto, sans-serif" font-size="13" font-weight="500" fill="#212121">Terminé</text>
+      <text x="80" y="38" font-family="Roboto, sans-serif" font-size="10" fill="#757575">12 tâches</text>
+      
+      <circle cx="310" cy="25" r="14" fill="rgba(0,0,0,0.04)"/>
+      <text x="310" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#757575">✏️</text>
+      
+      <circle cx="340" cy="25" r="14" fill="rgba(244,67,54,0.1)"/>
+      <text x="340" y="30" text-anchor="middle" font-family="Material Icons" font-size="16" fill="#ef5350">🗑️</text>
+    </g>
+  </g>
+  
+  <!-- Shadow -->
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+</svg>
+

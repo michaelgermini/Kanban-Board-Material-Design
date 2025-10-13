@@ -9,7 +9,15 @@ Un tableau Kanban **ultra-moderne** avec organisation **2D (colonnes × lignes)*
 
 ## 🌟 [DÉMO EN LIGNE](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
 
-![Kanban Board Preview](https://via.placeholder.com/800x400/1976d2/ffffff?text=Kanban+Board+2D+Material+Design)
+![Hero Banner](assets/hero-banner.svg)
+
+### 📱 Multi-Plateforme
+
+<p align="center">
+  <img src="assets/desktop-preview.svg" width="45%" alt="Desktop View"/>
+  <img src="assets/tablet-preview.svg" width="25%" alt="Tablet View"/>
+  <img src="assets/mobile-preview.svg" width="15%" alt="Mobile View"/>
+</p>
 
 ## 🚀 Démarrage Rapide
 
@@ -503,16 +511,37 @@ Le projet est automatiquement déployé sur GitHub Pages via GitHub Actions.
 
 ---
 
-## 📸 Screenshots
+## 📸 Captures d'Écran
 
-### Vue d'ensemble 2D
-![Grille 2D](https://via.placeholder.com/800x500/fafafa/1976d2?text=Grille+2D+Colonnes+x+Lignes)
+### 🖥️ Vue Desktop - Grille 2D
+![Grille 2D Desktop](assets/desktop-preview.svg)
 
-### Gestion des Colonnes
-![Colonnes](https://via.placeholder.com/800x400/ffffff/9c27b0?text=Gestion+Colonnes+Dynamiques)
+*Organisation 2D avec swimlanes et colonnes personnalisables*
 
-### Analytics Dashboard
-![Analytics](https://via.placeholder.com/800x400/ffffff/4caf50?text=Dashboard+Analytics+Chart.js)
+---
+
+### 📊 Gestion des Colonnes
+![Gestion Colonnes](assets/column-management.svg)
+
+*Interface de gestion CRUD des colonnes avec emoji et couleurs*
+
+---
+
+### 📈 Analytics Dashboard
+![Analytics Dashboard](assets/analytics-preview.svg)
+
+*Statistiques temps réel avec graphiques interactifs Chart.js*
+
+---
+
+### 📱 Responsive Design
+
+<p align="center">
+  <img src="assets/tablet-preview.svg" width="40%" alt="Vue Tablette"/>
+  <img src="assets/mobile-preview.svg" width="20%" alt="Vue Mobile"/>
+</p>
+
+*Adaptation automatique pour tablettes et mobiles*
 
 ---
 
