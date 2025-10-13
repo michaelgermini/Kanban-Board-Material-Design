@@ -1,0 +1,93 @@
+<svg width="800" height="120" viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradBg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1976d2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#42a5f5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1976d2;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="120" fill="url(#gradBg)"/>
+  
+  <!-- Animated Cards -->
+  <g opacity="0.9">
+    <!-- Card moving from column 1 to column 2 -->
+    <rect x="50" y="30" width="140" height="60" rx="8" fill="white" filter="url(#glow)">
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0,0; 180,0; 180,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </rect>
+    <text x="120" y="55" text-anchor="middle" font-family="Roboto, sans-serif" font-size="12" font-weight="500" fill="#212121">
+      <tspan>📝 Design UI</tspan>
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0,0; 180,0; 180,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </text>
+    <rect x="60" y="65" width="45" height="16" rx="8" fill="#ab47bc">
+      <animateTransform
+        attributeName="transform"
+        type="translate"
+        values="0,0; 180,0; 180,0"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </rect>
+    <text x="82.5" y="76" text-anchor="middle" font-family="Roboto, sans-serif" font-size="9" fill="white">design</text>
+    
+    <!-- Column Labels -->
+    <text x="120" y="20" text-anchor="middle" font-family="Roboto, sans-serif" font-size="14" font-weight="500" fill="white">📝 À faire</text>
+    <text x="300" y="20" text-anchor="middle" font-family="Roboto, sans-serif" font-size="14" font-weight="500" fill="white">⚡ En cours</text>
+    <text x="480" y="20" text-anchor="middle" font-family="Roboto, sans-serif" font-size="14" font-weight="500" fill="white">👁️ Révision</text>
+    <text x="660" y="20" text-anchor="middle" font-family="Roboto, sans-serif" font-size="14" font-weight="500" fill="white">✅ Terminé</text>
+    
+    <!-- Static Cards -->
+    <rect x="410" y="30" width="140" height="60" rx="8" fill="white" opacity="0.7"/>
+    <text x="480" y="55" text-anchor="middle" font-family="Roboto, sans-serif" font-size="11" fill="#212121">🧪 Tests API</text>
+    <rect x="420" y="65" width="30" height="14" rx="7" fill="#ffca28"/>
+    <text x="435" y="74" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="black">test</text>
+    
+    <rect x="590" y="30" width="140" height="60" rx="8" fill="white" opacity="0.7"/>
+    <text x="660" y="55" text-anchor="middle" font-family="Roboto, sans-serif" font-size="11" fill="#212121">✅ Setup CI/CD</text>
+    <rect x="600" y="65" width="42" height="14" rx="7" fill="#66bb6a"/>
+    <text x="621" y="74" text-anchor="middle" font-family="Roboto, sans-serif" font-size="8" fill="white">backend</text>
+  </g>
+  
+  <!-- Arrow animation -->
+  <g opacity="0.8">
+    <path d="M 190 60 L 220 60" stroke="white" stroke-width="3" fill="none" stroke-linecap="round">
+      <animate
+        attributeName="opacity"
+        values="0;1;0"
+        dur="1.5s"
+        repeatCount="indefinite"/>
+    </path>
+    <path d="M 215 55 L 220 60 L 215 65" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <animate
+        attributeName="opacity"
+        values="0;1;0"
+        dur="1.5s"
+        repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Drag & Drop Indicator -->
+  <text x="400" y="110" text-anchor="middle" font-family="Roboto, sans-serif" font-size="13" fill="rgba(255,255,255,0.9)" font-style="italic">
+    🔄 Drag & Drop entre colonnes et lignes
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+  </text>
+</svg>
+

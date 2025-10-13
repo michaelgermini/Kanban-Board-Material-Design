@@ -1,15 +1,56 @@
 # 🚀 Kanban Board 2D - Material Design - Pack Professionnel
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge&logo=github)](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
+[![Live Demo](https://img.shields.io/badge/🌟_DEMO_LIVE-Essayer_Maintenant-success?style=for-the-badge&logo=github)](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0-orange?style=for-the-badge)](https://github.com/michaelgermini/Kanban-Board-Material-Design/releases)
 [![JavaScript](https://img.shields.io/badge/vanilla-JavaScript-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Chart.js](https://img.shields.io/badge/Chart.js-4.4.0-FF6384?style=for-the-badge&logo=chartdotjs)](https://www.chartjs.org/)
+[![Material Design](https://img.shields.io/badge/Material-Design-757575?style=for-the-badge&logo=material-design)](https://material.io/)
 
 Un tableau Kanban **ultra-moderne** avec organisation **2D (colonnes × lignes)**, analytics professionnels, et toutes les fonctionnalités avancées. Créé avec HTML, CSS et JavaScript vanilla, utilisant le Material Design de Google.
 
-## 🌟 [DÉMO EN LIGNE](https://michaelgermini.github.io/Kanban-Board-Material-Design/)
+---
+
+## 🌟 Démo En Ligne
+
+### 👉 **[ESSAYEZ LA DÉMO INTERACTIVE](https://michaelgermini.github.io/Kanban-Board-Material-Design/)** 👈
+
+> **🎯 Testez toutes les fonctionnalités** : Créez des tâches, ajoutez des colonnes et lignes, consultez les analytics, exportez vos données !
+> 
+> **📱 100% Fonctionnel** : Fonctionne sur desktop, tablette et mobile
+>
+> **💾 Vos données restent locales** : Tout est sauvegardé dans votre navigateur
+
+<div align="center">
+  
+**[🚀 Lancer l'Application](https://michaelgermini.github.io/Kanban-Board-Material-Design/)**
+
+</div>
+
+---
+
+## 📚 Table des Matières
+
+- [🌟 Démo En Ligne](#-démo-en-ligne)
+- [🚀 Démarrage Rapide](#-démarrage-rapide)
+- [✨ Fonctionnalités Complètes](#-fonctionnalités-complètes)
+- [🛠️ Technologies & Stack](#️-technologies--stack)
+- [📸 Captures d'Écran](#-captures-décran)
+- [🌍 Déploiement GitHub Pages](#-déploiement-github-pages)
+- [🤝 Contribution](#-contribution)
+- [👨‍💻 Auteur](#-auteur)
+
+---
 
 ![Hero Banner](assets/hero-banner.svg)
+
+### 🎬 Aperçu Animé
+
+![Demo Animation](assets/demo-animation.svg)
+
+*Glissez-déposez vos tâches entre colonnes en temps réel*
+
+---
 
 ### 📱 Multi-Plateforme
 
@@ -20,6 +61,14 @@ Un tableau Kanban **ultra-moderne** avec organisation **2D (colonnes × lignes)*
 </p>
 
 ## 🚀 Démarrage Rapide
+
+### Option 1 : Essayer en Ligne (Instantané) ⚡
+
+**👉 [Cliquez ici pour utiliser l'application](https://michaelgermini.github.io/Kanban-Board-Material-Design/) 👈**
+
+Aucune installation requise ! L'application fonctionne directement dans votre navigateur.
+
+### Option 2 : Installation Locale
 
 ```bash
 # Cloner le dépôt
@@ -34,6 +83,12 @@ xdg-open index.html  # Linux
 ```
 
 **C'est tout !** Aucune installation, aucune dépendance, aucune configuration. 🎉
+
+### Option 3 : Téléchargement Direct
+
+1. Téléchargez le [ZIP du projet](https://github.com/michaelgermini/Kanban-Board-Material-Design/archive/refs/heads/main.zip)
+2. Décompressez
+3. Double-cliquez sur `index.html`
 
 ---
 
@@ -573,7 +628,34 @@ Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plu
 
 ## ⭐ Support
 
-Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ !
+Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ sur GitHub !
+
+[![Star History](https://img.shields.io/github/stars/michaelgermini/Kanban-Board-Material-Design?style=social)](https://github.com/michaelgermini/Kanban-Board-Material-Design)
+
+---
+
+## ❓ FAQ
+
+### **Q : Dois-je installer quelque chose ?**
+**R :** Non ! Ouvrez simplement `index.html` dans votre navigateur. Ou utilisez la [démo en ligne](https://michaelgermini.github.io/Kanban-Board-Material-Design/).
+
+### **Q : Mes données sont-elles sauvegardées ?**
+**R :** Oui, automatiquement dans le localStorage de votre navigateur. Exportez régulièrement pour plus de sécurité.
+
+### **Q : Puis-je utiliser sans Internet ?**
+**R :** Oui ! 100% offline après le premier chargement.
+
+### **Q : Combien de colonnes/lignes puis-je créer ?**
+**R :** Illimité ! La grille s'adapte automatiquement.
+
+### **Q : Est-ce compatible mobile ?**
+**R :** Parfaitement ! Design responsive avec support tactile.
+
+### **Q : Puis-je personnaliser les couleurs et emojis ?**
+**R :** Absolument ! Chaque colonne a son emoji et sa couleur personnalisables.
+
+### **Q : Comment partager mon tableau avec mon équipe ?**
+**R :** Exportez en JSON et partagez le fichier. Votre équipe l'importe ensuite.
 
 ---
 
