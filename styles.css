@@ -162,6 +162,27 @@ body {
     box-shadow: var(--shadow-3);
 }
 
+/* Enhanced drag and drop indicators */
+.kanban-column.drag-over .column-content {
+    background-color: rgba(25, 118, 210, 0.02);
+    border-radius: var(--border-radius-md);
+    transition: background-color var(--transition-fast);
+}
+
+/* Improve drag placeholder styling */
+.task-card.drag-placeholder {
+    background-color: rgba(25, 118, 210, 0.1);
+    border: 2px dashed var(--primary-color);
+    min-height: 80px;
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
 /* Column Header */
 .column-header {
     display: flex;

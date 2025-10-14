@@ -13,6 +13,9 @@ class KanbanBoard {
             columnId: task.columnId || this.columns[0]?.id,
             rowId: task.rowId || this.rows[0]?.id
         }));
+
+        // Assign order to tasks that don't have one
+        this.migrateTaskOrders();
         
         // UI State
         this.draggedElement = null;
@@ -28,6 +31,30 @@ class KanbanBoard {
         this.attachEventListeners();
         this.renderBoard();
         this.updateTagFilters();
+    }
+
+    migrateTaskOrders() {
+        // Group tasks by column and row
+        const tasksByLocation = {};
+
+        this.tasks.forEach(task => {
+            const key = `${task.columnId}-${task.rowId}`;
+            if (!tasksByLocation[key]) {
+                tasksByLocation[key] = [];
+            }
+            tasksByLocation[key].push(task);
+        });
+
+        // Assign order to tasks that don't have one
+        Object.values(tasksByLocation).forEach(locationTasks => {
+            locationTasks.forEach((task, index) => {
+                if (task.order === undefined || task.order === null) {
+                    task.order = index;
+                }
+            });
+        });
+
+        this.saveAllData();
     }
 
     // Default data structures
@@ -248,12 +275,20 @@ class KanbanBoard {
             rowId: rowId,
             tags: Array.isArray(tags) ? tags : [],
             dueDate: dueDate || null,
+            order: this.getNextOrderInColumn(columnId, rowId),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
         this.tasks.push(task);
         this.saveAllData();
         return task;
+    }
+
+    getNextOrderInColumn(columnId, rowId) {
+        const tasksInColumn = this.tasks.filter(t => t.columnId === columnId && t.rowId === rowId);
+        if (tasksInColumn.length === 0) return 0;
+        const maxOrder = Math.max(...tasksInColumn.map(t => t.order || 0));
+        return maxOrder + 1;
     }
 
     updateTask(id, updates) {
@@ -272,6 +307,39 @@ class KanbanBoard {
 
     deleteTask(id) {
         this.tasks = this.tasks.filter(task => task.id !== id);
+        this.saveAllData();
+    }
+
+    reorderTasksInColumn(columnId, rowId, draggedTaskId, targetElement) {
+        const tasksInColumn = this.tasks
+            .filter(t => t.columnId === columnId && t.rowId === rowId)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        const draggedTask = this.tasks.find(t => t.id === draggedTaskId);
+        if (!draggedTask) return;
+
+        // Remove dragged task from current position
+        const filteredTasks = tasksInColumn.filter(t => t.id !== draggedTaskId);
+
+        // Find insertion index based on target element
+        let insertIndex = filteredTasks.length; // Default to end
+
+        if (targetElement && targetElement.classList.contains('task-card')) {
+            const targetTaskId = targetElement.dataset.taskId;
+            const targetTaskIndex = filteredTasks.findIndex(t => t.id === targetTaskId);
+            if (targetTaskIndex !== -1) {
+                insertIndex = targetTaskIndex;
+            }
+        }
+
+        // Insert dragged task at new position
+        filteredTasks.splice(insertIndex, 0, draggedTask);
+
+        // Update orders
+        filteredTasks.forEach((task, index) => {
+            task.order = index;
+        });
+
         this.saveAllData();
     }
 
@@ -498,8 +566,11 @@ class KanbanBoard {
             content.innerHTML = '';
         });
 
+        // Sort tasks by order before rendering
+        const sortedTasks = filteredTasks.sort((a, b) => (a.order || 0) - (b.order || 0));
+
         // Render filtered tasks
-        filteredTasks.forEach(task => {
+        sortedTasks.forEach(task => {
             const columnContent = document.querySelector(
                 `.column-content[data-column-id="${task.columnId}"][data-row-id="${task.rowId}"]`
             );
@@ -920,12 +991,26 @@ class KanbanBoard {
         targetColumn.classList.add('drag-over');
 
         if (!this.dragPlaceholder) return;
-        const columnContent = targetColumn.querySelector('.column-content');
-        const afterElement = this.getDragAfterElement(columnContent, e.clientY);
 
-        if (afterElement) {
-            columnContent.insertBefore(this.dragPlaceholder, afterElement);
+        const columnContent = targetColumn.querySelector('.column-content');
+
+        // Check if we're dragging within the same column
+        const draggedTaskId = this.draggedElement.dataset.taskId;
+        const draggedTask = this.tasks.find(t => t.id === draggedTaskId);
+        const sameColumn = draggedTask && draggedTask.columnId === targetColumn.dataset.columnId &&
+                          draggedTask.rowId === targetColumn.dataset.rowId;
+
+        if (sameColumn) {
+            // For same column, allow reordering
+            const afterElement = this.getDragAfterElement(columnContent, e.clientY);
+
+            if (afterElement && afterElement !== this.draggedElement) {
+                columnContent.insertBefore(this.dragPlaceholder, afterElement);
+            } else if (!afterElement) {
+                columnContent.appendChild(this.dragPlaceholder);
+            }
         } else {
+            // For different columns, just append to end
             columnContent.appendChild(this.dragPlaceholder);
         }
     }
@@ -942,10 +1027,26 @@ class KanbanBoard {
         const task = this.tasks.find(t => t.id === taskId);
         const column = this.columns.find(c => c.id === newColumnId);
 
-        this.updateTask(taskId, { columnId: newColumnId, rowId: newRowId });
-        this.renderBoard();
-        
-        this.showToast('info', 'swap_horiz', `"${task.title}" → ${column.name}`);
+        // Check if we're dropping in the same column
+        const sameColumn = task.columnId === newColumnId && task.rowId === newRowId;
+
+        if (sameColumn) {
+            // Reorder within the same column
+            const placeholder = document.querySelector('.drag-placeholder');
+            const targetElement = placeholder ? placeholder.nextElementSibling : null;
+
+            this.reorderTasksInColumn(newColumnId, newRowId, taskId, targetElement);
+            this.renderBoard();
+            this.showToast('info', 'reorder', `Tâche réorganisée dans ${column.name}`);
+        } else {
+            // Move to different column
+            const updates = { columnId: newColumnId, rowId: newRowId };
+            updates.order = this.getNextOrderInColumn(newColumnId, newRowId);
+
+            this.updateTask(taskId, updates);
+            this.renderBoard();
+            this.showToast('info', 'swap_horiz', `"${task.title}" → ${column.name}`);
+        }
     }
 
     getDragAfterElement(container, y) {
@@ -1000,7 +1101,28 @@ class KanbanBoard {
             const taskId = this.draggedElement.dataset.taskId;
             const newColumnId = targetColumn.dataset.columnId;
             const newRowId = targetColumn.dataset.rowId;
-            this.updateTask(taskId, { columnId: newColumnId, rowId: newRowId });
+            const task = this.tasks.find(t => t.id === taskId);
+
+            // Check if we're dropping in the same column
+            const sameColumn = task.columnId === newColumnId && task.rowId === newRowId;
+
+            if (sameColumn) {
+                // For same column reordering on mobile, just update order to end
+                // (mobile drag and drop is less precise, so we simplify)
+                const tasksInColumn = this.tasks
+                    .filter(t => t.columnId === newColumnId && t.rowId === newRowId)
+                    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                // Move task to end
+                task.order = Math.max(...tasksInColumn.map(t => t.order || 0)) + 1;
+                this.saveAllData();
+            } else {
+                // Move to different column
+                const updates = { columnId: newColumnId, rowId: newRowId };
+                updates.order = this.getNextOrderInColumn(newColumnId, newRowId);
+                this.updateTask(taskId, updates);
+            }
+
             this.renderBoard();
         }
 
