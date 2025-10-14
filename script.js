@@ -27,10 +27,61 @@ class KanbanBoard {
         this.activeTagFilters = [];
         this.charts = {};
 
+        // Due date reminders
+        this.lastReminderCheck = 0;
+        this.reminderInterval = null;
+        this.notificationHistory = new Set();
+
+        // Theme management
+        this.currentTheme = this.loadThemePreference();
+
+        // Task templates
+        this.taskTemplates = {
+            bug: {
+                title: 'Corriger le bug : ',
+                description: 'Description du bug à corriger',
+                priority: 'high',
+                tags: ['bug', 'urgent']
+            },
+            feature: {
+                title: 'Nouvelle fonctionnalité : ',
+                description: 'Description de la fonctionnalité à développer',
+                priority: 'medium',
+                tags: ['feature', 'frontend']
+            },
+            meeting: {
+                title: 'Réunion : ',
+                description: 'Sujet de la réunion et objectifs',
+                priority: 'medium',
+                tags: ['meeting']
+            },
+            urgent: {
+                title: 'URGENT : ',
+                description: 'Tâche urgente nécessitant une attention immédiate',
+                priority: 'urgent',
+                tags: ['urgent']
+            },
+            design: {
+                title: 'Design : ',
+                description: 'Description du travail de design à effectuer',
+                priority: 'medium',
+                tags: ['design']
+            },
+            documentation: {
+                title: 'Documentation : ',
+                description: 'Documentation à rédiger ou mettre à jour',
+                priority: 'low',
+                tags: ['documentation']
+            }
+        };
+
         this.initializeElements();
         this.attachEventListeners();
+        this.applyTheme();
+        this.watchSystemTheme();
         this.renderBoard();
         this.updateTagFilters();
+        this.startDueDateReminders();
     }
 
     migrateTaskOrders() {
@@ -111,6 +162,15 @@ class KanbanBoard {
         this.editTaskDueDate = document.getElementById('editTaskDueDate');
         this.editTaskRow = document.getElementById('editTaskRow');
 
+        // Edit subtasks
+        this.editSubtaskInput = document.getElementById('editSubtaskInput');
+        this.addSubtaskBtn = document.getElementById('addSubtaskBtn');
+        this.editSubtasksList = document.getElementById('editSubtasksList');
+
+        // Theme toggle
+        this.themeToggleBtn = document.getElementById('themeToggleBtn');
+        this.themeIcon = document.getElementById('themeIcon');
+
         // Form inputs - Column
         this.columnId = document.getElementById('columnId');
         this.columnName = document.getElementById('columnName');
@@ -145,6 +205,10 @@ class KanbanBoard {
 
         this.addColumnBtn = document.getElementById('addColumnBtn');
         this.addRowBtn = document.getElementById('addRowBtn');
+
+        // Urgent badge
+        this.urgentBadge = document.getElementById('urgentBadge');
+        this.urgentCount = document.getElementById('urgentCount');
 
         // Lists
         this.columnsList = document.getElementById('columnsList');
@@ -214,6 +278,25 @@ class KanbanBoard {
             });
         });
 
+        // Task templates
+        document.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.applyTaskTemplate(btn.dataset.template);
+            });
+        });
+
+        // Edit subtasks
+        this.addSubtaskBtn.addEventListener('click', () => this.addSubtaskFromInput());
+        this.editSubtaskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.addSubtaskFromInput();
+            }
+        });
+
+        // Theme toggle
+        this.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
+
         // Color suggestions
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -264,7 +347,7 @@ class KanbanBoard {
         return Date.now().toString() + Math.random().toString(36).substr(2, 9);
     }
 
-    createTask(title, description, priority, assignee, columnId, rowId, tags = [], dueDate = null) {
+    createTask(title, description, priority, assignee, columnId, rowId, tags = [], dueDate = null, subtasks = []) {
         const task = {
             id: this.generateId(),
             title: title.trim(),
@@ -275,12 +358,17 @@ class KanbanBoard {
             rowId: rowId,
             tags: Array.isArray(tags) ? tags : [],
             dueDate: dueDate || null,
+            subtasks: Array.isArray(subtasks) ? subtasks : [],
             order: this.getNextOrderInColumn(columnId, rowId),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
         this.tasks.push(task);
         this.saveAllData();
+
+        // Update urgent badge after creating task
+        this.updateUrgentBadge();
+
         return task;
     }
 
@@ -300,6 +388,10 @@ class KanbanBoard {
                 updatedAt: new Date().toISOString()
             };
             this.saveAllData();
+
+            // Update urgent badge after task changes
+            this.updateUrgentBadge();
+
             return this.tasks[taskIndex];
         }
         return null;
@@ -341,6 +433,61 @@ class KanbanBoard {
         });
 
         this.saveAllData();
+    }
+
+    // === SUBTASK MANAGEMENT ===
+    addSubtask(taskId, subtaskText) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return false;
+
+        if (!task.subtasks) task.subtasks = [];
+
+        const subtask = {
+            id: this.generateId(),
+            text: subtaskText.trim(),
+            completed: false,
+            createdAt: new Date().toISOString()
+        };
+
+        task.subtasks.push(subtask);
+        this.saveAllData();
+        this.renderBoard();
+        return true;
+    }
+
+    toggleSubtask(taskId, subtaskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task || !task.subtasks) return false;
+
+        const subtask = task.subtasks.find(st => st.id === subtaskId);
+        if (!subtask) return false;
+
+        subtask.completed = !subtask.completed;
+        this.saveAllData();
+        this.renderBoard();
+        return true;
+    }
+
+    deleteSubtask(taskId, subtaskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task || !task.subtasks) return false;
+
+        task.subtasks = task.subtasks.filter(st => st.id !== subtaskId);
+        this.saveAllData();
+        this.renderBoard();
+        return true;
+    }
+
+    getSubtaskProgress(task) {
+        if (!task.subtasks || task.subtasks.length === 0) {
+            return { completed: 0, total: 0, percentage: 0 };
+        }
+
+        const completed = task.subtasks.filter(st => st.completed).length;
+        const total = task.subtasks.length;
+        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        return { completed, total, percentage };
     }
 
     // === COLUMN MANAGEMENT ===
@@ -594,6 +741,9 @@ class KanbanBoard {
         const formattedDate = this.formatDate(task.createdAt);
         const dueDateBadge = this.createDueDateBadge(task.dueDate);
         const tagsHtml = this.createTagsHtml(task.tags);
+        const subtaskProgress = this.getSubtaskProgress(task);
+        const progressBarHtml = subtaskProgress.total > 0 ? this.createProgressBar(subtaskProgress) : '';
+        const subtasksHtml = this.createSubtasksHtml(task);
 
         taskElement.innerHTML = `
             <div class="task-header">
@@ -602,12 +752,17 @@ class KanbanBoard {
             </div>
             ${task.description ? `<div class="task-description">${this.escapeHtml(task.description)}</div>` : ''}
             ${tagsHtml}
+            ${progressBarHtml}
+            ${subtasksHtml}
             ${dueDateBadge}
             <div class="task-footer">
                 ${task.assignee ? `<div class="task-assignee"><span class="material-icons">person</span>${this.escapeHtml(task.assignee)}</div>` : '<div></div>'}
                 <div class="task-date">${formattedDate}</div>
             </div>
         `;
+
+        // Add event listeners for subtasks
+        this.attachSubtaskEventListeners(taskElement, task);
 
         taskElement.addEventListener('dblclick', () => this.openEditTaskModal(task.id));
         return taskElement;
@@ -875,6 +1030,7 @@ class KanbanBoard {
         this.editTaskDueDate.value = task.dueDate || '';
 
         this.populateRowSelect(this.editTaskRow, task.rowId);
+        this.renderEditSubtasks(task);
 
         this.editModalOverlay.classList.add('active');
         this.editTaskTitle.focus();
@@ -1464,6 +1620,307 @@ class KanbanBoard {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // === DUE DATE REMINDERS ===
+    startDueDateReminders() {
+        // Check immediately
+        this.checkDueDateReminders();
+
+        // Check every 5 minutes
+        this.reminderInterval = setInterval(() => {
+            this.checkDueDateReminders();
+        }, 5 * 60 * 1000);
+
+        // Update urgent badge on task changes
+        this.updateUrgentBadge();
+    }
+
+    checkDueDateReminders() {
+        const now = new Date();
+        const currentTime = now.getTime();
+
+        // Don't check more than once per minute
+        if (currentTime - this.lastReminderCheck < 60000) return;
+        this.lastReminderCheck = currentTime;
+
+        const urgentTasks = this.getUrgentTasks();
+
+        urgentTasks.forEach(task => {
+            const taskKey = `${task.id}-${task.dueDate}`;
+
+            // Only show notification once per session for each task-date combination
+            if (!this.notificationHistory.has(taskKey)) {
+                this.showDueDateReminder(task);
+                this.notificationHistory.add(taskKey);
+            }
+        });
+
+        this.updateUrgentBadge();
+    }
+
+    getUrgentTasks() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        return this.tasks.filter(task => {
+            if (!task.dueDate) return false;
+
+            const dueDate = new Date(task.dueDate);
+            const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+
+            const diffTime = dueDateOnly - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Tasks that are overdue or due today or tomorrow
+            return diffDays <= 1;
+        });
+    }
+
+    showDueDateReminder(task) {
+        const now = new Date();
+        const dueDate = new Date(task.dueDate);
+        const diffTime = dueDate - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let message = '';
+        let icon = '';
+
+        if (diffDays < 0) {
+            message = `"${task.title}" est en retard de ${Math.abs(diffDays)} jour(s) !`;
+            icon = 'error';
+        } else if (diffDays === 0) {
+            message = `"${task.title}" arrive à échéance aujourd'hui !`;
+            icon = 'today';
+        } else if (diffDays === 1) {
+            message = `"${task.title}" arrive à échéance demain !`;
+            icon = 'schedule';
+        }
+
+        if (message) {
+            this.showToast('warning', icon, message, 8000);
+
+            // Optional sound notification (only if user has interacted)
+            this.playNotificationSound();
+        }
+    }
+
+    updateUrgentBadge() {
+        const urgentTasks = this.getUrgentTasks();
+        const urgentCount = urgentTasks.length;
+
+        if (urgentCount > 0) {
+            this.urgentCount.textContent = urgentCount;
+            this.urgentBadge.style.display = 'flex';
+        } else {
+            this.urgentBadge.style.display = 'none';
+        }
+    }
+
+    playNotificationSound() {
+        // Optional sound notification - only if user has interacted with the page
+        try {
+            // Create audio context and play a gentle notification sound
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (e) {
+            // Silently fail if audio is not supported or blocked
+        }
+    }
+
+    // === TASK TEMPLATES ===
+    applyTaskTemplate(templateKey) {
+        const template = this.taskTemplates[templateKey];
+        if (!template) return;
+
+        // Apply template values to form fields
+        this.taskTitle.value = template.title;
+        this.taskDescription.value = template.description;
+        this.taskPriority.value = template.priority;
+        this.taskTags.value = template.tags.join(', ');
+
+        // Focus on title field for completion
+        this.taskTitle.focus();
+        this.taskTitle.setSelectionRange(template.title.length, template.title.length);
+
+        this.showToast('info', 'auto_fix_high', `Template "${templateKey}" appliqué !`);
+    }
+
+    // === SUBTASK UI ===
+    createProgressBar(progress) {
+        return `
+            <div class="subtask-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                </div>
+                <div class="progress-text">${progress.completed}/${progress.total} (${progress.percentage}%)</div>
+            </div>
+        `;
+    }
+
+    createSubtasksHtml(task) {
+        if (!task.subtasks || task.subtasks.length === 0) return '';
+
+        const subtasksHtml = task.subtasks.slice(0, 3).map(subtask => `
+            <div class="subtask-item ${subtask.completed ? 'completed' : ''}" data-subtask-id="${subtask.id}">
+                <input type="checkbox" ${subtask.completed ? 'checked' : ''} class="subtask-checkbox">
+                <span class="subtask-text">${this.escapeHtml(subtask.text)}</span>
+                <button class="subtask-delete" title="Supprimer">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+        `).join('');
+
+        const moreCount = task.subtasks.length > 3 ? `<div class="subtask-more">+${task.subtasks.length - 3} autres...</div>` : '';
+
+        return `
+            <div class="task-subtasks">
+                ${subtasksHtml}
+                ${moreCount}
+            </div>
+        `;
+    }
+
+    attachSubtaskEventListeners(taskElement, task) {
+        // Checkbox toggles
+        taskElement.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
+            const subtaskId = checkbox.closest('.subtask-item').dataset.subtaskId;
+            checkbox.addEventListener('change', (e) => {
+                e.stopPropagation();
+                this.toggleSubtask(task.id, subtaskId);
+            });
+        });
+
+        // Delete buttons
+        taskElement.querySelectorAll('.subtask-delete').forEach(btn => {
+            const subtaskId = btn.closest('.subtask-item').dataset.subtaskId;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm('Supprimer cette sous-tâche ?')) {
+                    this.deleteSubtask(task.id, subtaskId);
+                }
+            });
+        });
+    }
+
+    addSubtaskFromInput() {
+        const subtaskText = this.editSubtaskInput.value.trim();
+        if (!subtaskText || !this.currentTaskId) return;
+
+        if (this.addSubtask(this.currentTaskId, subtaskText)) {
+            this.editSubtaskInput.value = '';
+            this.renderEditSubtasks(this.tasks.find(t => t.id === this.currentTaskId));
+            this.showToast('success', 'check_circle', 'Sous-tâche ajoutée !');
+        }
+    }
+
+    renderEditSubtasks(task) {
+        this.editSubtasksList.innerHTML = '';
+
+        if (!task.subtasks || task.subtasks.length === 0) {
+            this.editSubtasksList.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: var(--spacing-md); font-size: 0.875rem;">Aucune sous-tâche</div>';
+            return;
+        }
+
+        task.subtasks.forEach(subtask => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'edit-subtask-item';
+            itemDiv.innerHTML = `
+                <input type="checkbox" class="edit-subtask-checkbox" ${subtask.completed ? 'checked' : ''} data-subtask-id="${subtask.id}">
+                <span class="edit-subtask-text ${subtask.completed ? 'completed' : ''}">${this.escapeHtml(subtask.text)}</span>
+                <button class="edit-subtask-delete" data-subtask-id="${subtask.id}">
+                    <span class="material-icons">delete</span>
+                </button>
+            `;
+
+            // Checkbox toggle
+            const checkbox = itemDiv.querySelector('.edit-subtask-checkbox');
+            checkbox.addEventListener('change', () => {
+                this.toggleSubtask(task.id, subtask.id);
+                const textSpan = itemDiv.querySelector('.edit-subtask-text');
+                textSpan.classList.toggle('completed', checkbox.checked);
+            });
+
+            // Delete button
+            const deleteBtn = itemDiv.querySelector('.edit-subtask-delete');
+            deleteBtn.addEventListener('click', () => {
+                if (confirm('Supprimer cette sous-tâche ?')) {
+                    this.deleteSubtask(task.id, subtask.id);
+                    this.renderEditSubtasks(task);
+                }
+            });
+
+            this.editSubtasksList.appendChild(itemDiv);
+        });
+    }
+
+    // === THEME MANAGEMENT ===
+    loadThemePreference() {
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('kanban-theme');
+
+        if (savedTheme) {
+            return savedTheme;
+        }
+
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+
+        return 'light';
+    }
+
+    saveThemePreference(theme) {
+        localStorage.setItem('kanban-theme', theme);
+    }
+
+    applyTheme() {
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
+        this.updateThemeIcon();
+    }
+
+    toggleTheme() {
+        this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        this.saveThemePreference(this.currentTheme);
+        this.applyTheme();
+
+        const themeName = this.currentTheme === 'dark' ? 'sombre' : 'clair';
+        this.showToast('info', 'palette', `Thème ${themeName} activé`);
+    }
+
+    updateThemeIcon() {
+        if (this.themeIcon) {
+            this.themeIcon.textContent = this.currentTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+    }
+
+    // Listen for system theme changes
+    watchSystemTheme() {
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+            mediaQuery.addEventListener('change', (e) => {
+                // Only auto-switch if user hasn't manually set a preference
+                if (!localStorage.getItem('kanban-theme')) {
+                    this.currentTheme = e.matches ? 'dark' : 'light';
+                    this.applyTheme();
+                }
+            });
+        }
     }
 }
 

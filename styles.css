@@ -11,12 +11,12 @@
     --secondary-dark: #9a0036;
     --secondary-light: #ff5983;
 
-    /* Surface Colors */
+    /* Surface Colors - Light Theme */
     --surface-color: #ffffff;
     --surface-variant: #f5f5f5;
     --background-color: #fafafa;
 
-    /* Text Colors */
+    /* Text Colors - Light Theme */
     --text-primary: #212121;
     --text-secondary: #757575;
     --text-disabled: #bdbdbd;
@@ -52,6 +52,66 @@
     --transition-fast: 0.15s ease-out;
     --transition-normal: 0.3s ease-out;
     --transition-slow: 0.5s ease-out;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+    /* Surface Colors - Dark Theme */
+    --surface-color: #1e1e1e;
+    --surface-variant: #2d2d2d;
+    --background-color: #121212;
+
+    /* Text Colors - Dark Theme */
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-disabled: #666666;
+}
+
+/* Theme-specific adjustments */
+[data-theme="dark"] .urgent-badge {
+    background-color: #ff6f00;
+}
+
+[data-theme="dark"] .task-card {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow-1);
+}
+
+[data-theme="dark"] .kanban-column {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .modal {
+    background-color: var(--surface-color);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] .form-select {
+    background-color: var(--surface-variant);
+    border-color: rgba(255, 255, 255, 0.23);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-textarea:focus,
+[data-theme="dark"] .form-select:focus {
+    border-color: var(--primary-color);
+    background-color: var(--surface-variant);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: relative;
+}
+
+.theme-toggle .material-icons {
+    transition: transform var(--transition-normal);
+}
+
+.theme-toggle:hover .material-icons {
+    transform: rotate(180deg);
 }
 
 /* Reset and Base Styles */
@@ -510,6 +570,205 @@ body {
     transform: translateY(-1px);
 }
 
+/* Task Templates */
+.task-templates {
+    margin-bottom: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.template-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.template-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--border-radius-md);
+    background-color: var(--surface-variant);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    justify-content: center;
+}
+
+.template-btn:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+}
+
+.template-btn:active {
+    transform: translateY(0);
+}
+
+.template-btn .material-icons {
+    font-size: 1.2rem;
+}
+
+/* Subtasks */
+.subtask-progress {
+    margin: var(--spacing-xs) 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-xs);
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: width var(--transition-fast);
+}
+
+.progress-text {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.task-subtasks {
+    margin: var(--spacing-xs) 0;
+}
+
+.subtask-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 2px 0;
+    font-size: 0.75rem;
+}
+
+.subtask-item.completed .subtask-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.subtask-checkbox {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.subtask-text {
+    flex: 1;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.subtask-delete {
+    width: 16px;
+    height: 16px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: all var(--transition-fast);
+}
+
+.subtask-item:hover .subtask-delete {
+    opacity: 1;
+}
+
+.subtask-delete:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--priority-high);
+}
+
+.subtask-more {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin-top: var(--spacing-xs);
+}
+
+/* Edit Subtasks */
+.subtask-input-group {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.edit-subtasks-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--border-radius-sm);
+}
+
+.edit-subtask-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.edit-subtask-item:last-child {
+    border-bottom: none;
+}
+
+.edit-subtask-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+.edit-subtask-text {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.edit-subtask-text.completed {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.edit-subtask-delete {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.edit-subtask-delete:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--priority-high);
+}
+
 .form-actions {
     display: flex;
     gap: var(--spacing-sm);
@@ -676,6 +935,42 @@ body {
     border-color: var(--primary-color);
     color: var(--primary-color);
     transform: translateY(-2px);
+}
+
+/* Urgent Badge */
+.urgent-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background-color: var(--priority-high);
+    color: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-2);
+    animation: pulse 2s infinite;
+    margin-right: var(--spacing-sm);
+}
+
+.urgent-badge .material-icons {
+    font-size: 1rem;
+    color: white;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: var(--shadow-2);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(244, 67, 54, 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: var(--shadow-2);
+    }
 }
 
 /* Search & Filter Bar */

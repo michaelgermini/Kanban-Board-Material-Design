@@ -19,6 +19,13 @@
                 Kanban Board
             </h1>
             <div class="header-actions">
+                <div class="urgent-badge" id="urgentBadge" style="display: none;">
+                    <span class="material-icons">warning</span>
+                    <span id="urgentCount">0</span>
+                </div>
+                <button class="icon-btn theme-toggle" id="themeToggleBtn" title="Basculer thème sombre/clair">
+                    <span class="material-icons" id="themeIcon">dark_mode</span>
+                </button>
                 <button class="icon-btn" id="manageColumnsBtn" title="Gérer les colonnes">
                     <span class="material-icons">view_week</span>
                 </button>
@@ -367,6 +374,35 @@
                         <!-- Rows will be added dynamically -->
                     </select>
                 </div>
+                <div class="task-templates">
+                    <label class="form-label">Templates rapides :</label>
+                    <div class="template-buttons">
+                        <button type="button" class="template-btn" data-template="bug">
+                            <span class="material-icons">🐛</span>
+                            Bug
+                        </button>
+                        <button type="button" class="template-btn" data-template="feature">
+                            <span class="material-icons">✨</span>
+                            Feature
+                        </button>
+                        <button type="button" class="template-btn" data-template="meeting">
+                            <span class="material-icons">👥</span>
+                            Meeting
+                        </button>
+                        <button type="button" class="template-btn" data-template="urgent">
+                            <span class="material-icons">🔥</span>
+                            Urgent
+                        </button>
+                        <button type="button" class="template-btn" data-template="design">
+                            <span class="material-icons">🎨</span>
+                            Design
+                        </button>
+                        <button type="button" class="template-btn" data-template="documentation">
+                            <span class="material-icons">📚</span>
+                            Documentation
+                        </button>
+                    </div>
+                </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancelBtn">Annuler</button>
                     <button type="submit" class="btn btn-primary">Créer la tâche</button>
@@ -431,6 +467,18 @@
                     <select id="editTaskRow" class="form-select">
                         <!-- Rows will be added dynamically -->
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sous-tâches</label>
+                    <div class="subtask-input-group">
+                        <input type="text" id="editSubtaskInput" class="form-input" placeholder="Ajouter une sous-tâche..." style="flex: 1;">
+                        <button type="button" id="addSubtaskBtn" class="btn btn-secondary">
+                            <span class="material-icons">add</span>
+                        </button>
+                    </div>
+                    <div id="editSubtasksList" class="edit-subtasks-list">
+                        <!-- Subtasks will be added here -->
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" id="deleteTaskBtn">Supprimer</button>
